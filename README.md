@@ -22,3 +22,11 @@ $ cd gowget
 $ go mod tidy
 $ go build -o gowget main.go
 ```
+
+## Author:
+- [krishpranav](https://github.com/krishpranav)
+
+## This is an open-source project contributions are alwayas welcome!!
+
+## License:
+- [Apache-2.0 License](https://github.com/krishpranav/gowget/blob/main/LICENSE)
