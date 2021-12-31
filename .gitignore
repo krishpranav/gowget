@@ -11,5 +11,14 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
+# system cache
+.DS_Store
+
+# ide cache
+.idea/
+.vscode/
+
 # Dependency directories (remove the comment below to include it)
 # vendor/
+#
+zip/
