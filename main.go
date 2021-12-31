@@ -3,6 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net/url"
+	"os"
+	"strings"
 )
 
 var (
@@ -18,8 +21,38 @@ var (
 
 func init() {
 	cliUrl = flag.String("url", "", usage)
+
+	cliVersion = flag.Bool("version", false, version)
+
+	cliHelp = flag.Bool("help", false, help)
+
+	cliAbout = flag.Bool("about", false, about)
 }
 
 func main() {
-	fmt.Printf(version)
+	flag.Parse()
+
+	if *cliUrl != "" {
+		fmt.Println("\nDownloading file...\n")
+
+		fileUrl, err := url.Parse(*cliUrl)
+
+		if err != nil {
+			panic(err)
+		}
+
+		filePath := fileUrl.Path
+
+		segments := strings.Split(filePath, "/")
+
+		fileName := segments[len(segments)-1]
+
+		file, err := os.Create(fileName)
+
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+		defer file.Close()
+	}
 }
