@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
+	"net/http"
 	"net/url"
 	"os"
 	"strings"
@@ -54,5 +56,34 @@ func main() {
 			panic(err)
 		}
 		defer file.Close()
+
+		checkStatus := http.Client{
+			CheckRedirect: func(r *http.Request, via []*http.Request) error {
+				r.URL.Opaque = r.URL.Path
+				return nil
+			},
+		}
+
+		response, err := checkStatus.Get(*cliUrl)
+
+		if err != nil {
+			fmt.Println(err)
+			panic(err)
+		}
+
+		defer response.Body.Close()
+		fmt.Fprintf("Request Status: %s\n\n", response.Status)
+
+		filesize := response.ContentLength
+
+		go func() {
+			n, err := io.Copy(file, response.Body)
+			if n != filesize {
+				fmt.Println("Truncated")
+			}
+			if err != nil {
+				fmt.Printf("Error: %v", err)
+			}
+		}()
 	}
 }
